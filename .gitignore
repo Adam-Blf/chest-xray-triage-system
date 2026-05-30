@@ -1,0 +1,74 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.installed.cfg
+*.egg
+.eggs/
+build/
+dist/
+
+# Virtual envs
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# Notebooks
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Datasets (downloaded, large)
+data/
+!data/.gitkeep
+
+# Model artifacts
+artifacts/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.h5
+*.safetensors
+
+# MLflow tracking store
+mlruns/
+mlartifacts/
+mlflow.db
+
+# Logs
+logs/
+*.log
+runs/
+tensorboard/
+wandb/
+
+# Secrets (defense in depth)
+.env
+.env.*
+!.env.example
+*secret*
+*.token
+sbp_*
+ghp_*
+github_pat_*
+*.pem
+scripts/*.local.mjs
+scripts/*.local.py
+
+# OS junk
+desktop.ini
+
+# Streamlit cache
+.streamlit/secrets.toml
