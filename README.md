@@ -9,7 +9,11 @@
 <!-- adam-badges:end -->
 
 Deep-learning triage system for chest radiographs · EFREI M1 Data
-Engineering & IA · Adam Beloucif.
+Engineering & IA · projet trinôme **Adam Beloucif**, **Emilien Morice** &
+**Arnaud Dissongo**.
+
+Cadre · [Mastère Data Engineering & IA](https://www.efrei.fr/formation/mastere-data-engineering-ia/),
+EFREI Villejuif · RNCP 40875.
 
 The repo covers every requirement from the project brief ·
 
@@ -139,6 +143,12 @@ docs/
 The smoke pipeline runs on CPU in a few minutes. Full training of the
 ViT at 224 px requires CUDA; reduce `--image-size 128` or use the ResNet18
 backbone if no GPU is available.
+
+## Auteurs
+
+- **Adam Beloucif** · [adam.beloucif@efrei.net](mailto:adam.beloucif@efrei.net) · [github.com/Adam-Blf](https://github.com/Adam-Blf)
+- **Emilien Morice** · binôme habituel des projets [[Mastère Data Engineering & IA]] M1
+- **Arnaud Dissongo** · troisième membre de l'équipe
 
 ## License
 

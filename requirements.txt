@@ -1,6 +1,6 @@
-# Deep learning core
-torch>=2.2.0
-torchvision>=0.17.0
+# Deep learning core · pin matched ABI (torch/torchvision must be released together)
+torch==2.5.1
+torchvision==0.20.1
 
 # Dataset
 medmnist>=3.0.0
