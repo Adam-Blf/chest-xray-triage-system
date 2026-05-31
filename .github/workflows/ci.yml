@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install runtime + test deps
+        run: |
+          python -m pip install --upgrade pip
+          # Install only what tests need (skip the heavy streamlit/mlflow stack
+          # for CI · they're imported at runtime by training scripts that CI
+          # does not exercise).
+          pip install torch==2.5.1 torchvision==0.20.1
+          pip install timm scikit-learn numpy pytest fpdf2
+          pip install medmnist
+
+      - name: Run smoke tests
+        env:
+          PYTHONPATH: .
+        run: pytest tests/ -q
+
+      - name: Generate report PDF
+        env:
+          PYTHONPATH: .
+        run: python -m scripts.generate_report
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-pdf-${{ matrix.python-version }}
+          path: artifacts/RAPPORT.pdf
+          if-no-files-found: error

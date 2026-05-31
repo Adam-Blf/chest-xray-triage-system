@@ -119,46 +119,105 @@ def _proba_chart(probs: np.ndarray):
 
 
 def sidebar():
-    st.sidebar.markdown("### Chest X-Ray Triage")
+    st.sidebar.markdown("### 🩻 Chest X-Ray Triage")
     st.sidebar.caption("EFREI M1 · Data Engineering & IA")
+    st.sidebar.caption("Beloucif · Morice · Dissongo")
     st.sidebar.markdown("---")
-    st.sidebar.markdown("**Models available in `artifacts/`**")
+    st.sidebar.markdown("**Modèles disponibles**")
+    rows = []
     for name in SUPERVISED_FACTORY:
         ckpt = ARTIFACTS_DIR / f"{name}_best.pt"
-        st.sidebar.write(f"- {name} · {'OK' if ckpt.exists() else 'missing'}")
+        rows.append(("📊 " + name, "✅" if ckpt.exists() else "❌"))
     for name in ("autoencoder", "vae"):
         ckpt = ARTIFACTS_DIR / f"{name}_best.pt"
-        st.sidebar.write(f"- {name} · {'OK' if ckpt.exists() else 'missing'}")
+        rows.append(("🚨 " + name, "✅" if ckpt.exists() else "❌"))
+    for name in ("multimodal-late", "multimodal-early", "multimodal-intermediate"):
+        ckpt = ARTIFACTS_DIR / f"{name}_best.pt"
+        if ckpt.exists():
+            rows.append(("🔀 " + name, "✅"))
+    for label, status in rows:
+        st.sidebar.write(f"{status}  {label}")
+
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("**Pour entraîner**")
+    st.sidebar.code(
+        "python -m src.train.train_cnn\n"
+        "python -m src.train.train_resnet\n"
+        "python -m src.train.train_vit\n"
+        "python -m src.train.train_ae\n"
+        "python -m src.train.train_vae\n"
+        "python -m src.train.train_multimodal",
+        language="bash",
+    )
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("[GitHub](https://github.com/Adam-Blf/chest-xray-triage-system)")
+
+
+def _disclaimer():
+    st.warning(
+        "⚠️  **Démonstrateur pédagogique** · ce système est un projet M1 "
+        "EFREI · il **ne remplace pas** un avis médical et n'a aucune "
+        "validation clinique. Aucune décision diagnostique ne doit s'appuyer "
+        "sur ces sorties.",
+        icon="⚠️",
+    )
+
+
+def _example_chip():
+    examples = sorted((ARTIFACTS_DIR / "examples").glob("*.png")) \
+        if (ARTIFACTS_DIR / "examples").exists() else []
+    if not examples:
+        return None
+    pick = st.selectbox("Ou choisis un exemple fourni",
+                        ["(aucun)"] + [p.name for p in examples])
+    if pick == "(aucun)":
+        return None
+    return Image.open(ARTIFACTS_DIR / "examples" / pick)
 
 
 def main():
     sidebar()
     st.title("🩻 Chest X-Ray Triage System")
-    st.write("Upload a chest radiograph to see the supervised predictions, the "
-             "anomaly score from the VAE and (optionally) a fused image + text "
-             "prediction.")
+    _disclaimer()
+    st.write(
+        "Charge une radiographie thoracique pour obtenir · (1) les "
+        "**prédictions multi-label** de pathologies, (2) un **score "
+        "d'atypicité** issu du VAE, et (3) une **prédiction fusionnée** "
+        "si tu ajoutes un texte de finding."
+    )
 
-    uploaded = st.file_uploader("Radiograph (PNG / JPG)",
-                                type=["png", "jpg", "jpeg"])
-    text_note = st.text_area("Optional radiology finding text",
-                             placeholder="e.g. 'evidence of cardiomegaly and effusion'")
+    col_up, col_ex = st.columns([2, 1])
+    with col_up:
+        uploaded = st.file_uploader("Radiographie (PNG / JPG)",
+                                    type=["png", "jpg", "jpeg"])
+    with col_ex:
+        example = _example_chip()
 
-    if uploaded is None:
-        st.info("Drop a chest X-ray on the left to start.")
+    text_note = st.text_area(
+        "Texte de finding (optionnel · active la fusion multimodale)",
+        placeholder="ex · evidence of cardiomegaly and effusion",
+    )
+
+    if uploaded is None and example is None:
+        st.info("Dépose une radiographie ou choisis un exemple pour démarrer.")
         return
 
-    img = Image.open(uploaded)
+    img = example if example is not None else Image.open(uploaded)
     col_img, col_pred = st.columns([1, 2])
     with col_img:
-        st.image(img, caption="Input radiograph", use_container_width=True)
+        st.image(img, caption="Radiographie d'entrée",
+                 use_container_width=True)
 
     with col_pred:
-        st.subheader("Supervised predictions")
-        choice = st.selectbox("Backbone", list(SUPERVISED_FACTORY.keys()), index=0)
+        st.subheader("Prédictions supervisées")
+        choice = st.selectbox("Architecture", list(SUPERVISED_FACTORY.keys()),
+                              index=0)
         loaded = load_supervised(choice)
         if loaded is None:
-            st.warning(f"No checkpoint for {choice}. Train it first with "
-                       f"`python -m src.train.train_cnn`.")
+            st.warning(
+                f"Pas de checkpoint pour `{choice}`. Entraîne-le avec "
+                f"`python -m src.train.{choice.split('-')[0]}` puis recharge."
+            )
         else:
             model, image_size, payload = loaded
             x = _prepare(img, image_size)
@@ -168,17 +227,20 @@ def main():
                     logits = logits["fused_logits"]
                 probs = torch.sigmoid(logits).squeeze(0).cpu().numpy()
             top_idx = int(np.argmax(probs))
-            st.metric("Top pathology", CHEST_LABELS[top_idx],
+            st.metric("Pathologie la plus probable", CHEST_LABELS[top_idx],
                       f"{probs[top_idx]:.2%}")
             _proba_chart(probs)
             if payload.get("val_macro_auroc") is not None:
-                st.caption(f"Validation macro-AUROC · {payload['val_macro_auroc']:.4f}")
+                st.caption(
+                    f"Validation macro-AUROC du run sélectionné · "
+                    f"{float(payload['val_macro_auroc']):.4f}"
+                )
 
     st.markdown("---")
-    st.subheader("Anomaly score (AE / VAE)")
+    st.subheader("Score d'atypicité (AE / VAE)")
     loaded = load_autoencoder()
     if loaded is None:
-        st.warning("No AE/VAE checkpoint. Train one with "
+        st.warning("Aucun checkpoint AE/VAE. Entraîne avec "
                    "`python -m src.train.train_vae`.")
     else:
         ae_model, threshold, ae_size, kind = loaded
@@ -190,22 +252,23 @@ def main():
                 recon, _ = ae_model(x)
                 score = ConvAutoencoder.reconstruction_error(x, recon).item()
         col_a, col_b = st.columns(2)
-        col_a.metric(f"{kind} anomaly score", f"{score:.4f}",
-                     delta=f"threshold p99 · {threshold:.4f}")
+        col_a.metric(f"Score {kind}", f"{score:.4f}",
+                     delta=f"seuil p99 · {threshold:.4f}")
         col_b.progress(min(1.0, score / max(threshold, 1e-6)),
-                       text="atypicality vs. threshold")
+                       text="atypicité vs. seuil")
         if score > threshold:
-            st.error("⚠️ above the 99th-percentile threshold · flag for review.")
+            st.error("⚠️ Au-dessus du 99e percentile · à revoir.", icon="⚠️")
         else:
-            st.success("Within the typical reconstruction distribution.")
+            st.success("Dans la distribution typique de reconstruction.",
+                       icon="✅")
 
     if text_note.strip():
         st.markdown("---")
-        st.subheader("Multimodal fusion (image + text)")
+        st.subheader("Fusion multimodale image + texte")
         loaded = load_multimodal()
         if loaded is None:
-            st.warning("No multimodal checkpoint. Train one with "
-                       "`python -m src.train.train_multimodal`.")
+            st.warning("Aucun checkpoint multimodal. Entraîne avec "
+                       "`python -m src.train.train_multimodal --fusion late`.")
         else:
             mm_model, tokenize, name = loaded
             x = _prepare(img, 64)
@@ -215,8 +278,16 @@ def main():
             with torch.no_grad():
                 out = mm_model(x, ids_t, mask_t)
                 fused = torch.sigmoid(out["fused_logits"]).squeeze(0).cpu().numpy()
-            st.caption(f"Checkpoint · {name}")
-            _proba_chart(fused)
+                img_only = torch.sigmoid(out["image_logits"]).squeeze(0).cpu().numpy()
+                txt_only = torch.sigmoid(out["text_logits"]).squeeze(0).cpu().numpy()
+            st.caption(f"Checkpoint · `{name}`")
+            tab_fused, tab_img, tab_txt = st.tabs(["Fusion", "Image seule", "Texte seul"])
+            with tab_fused:
+                _proba_chart(fused)
+            with tab_img:
+                _proba_chart(img_only)
+            with tab_txt:
+                _proba_chart(txt_only)
 
 
 if __name__ == "__main__":

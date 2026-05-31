@@ -191,7 +191,24 @@ Métriques par run (`src/evaluation.py`) ·
 - **F1 macro** au seuil 0.5
 - **par classe** · AUROC, F1, précision, rappel, support
 
-À reporter en table dans le rapport final (extrait MLflow UI vers CSV).
+### 8.1 Résultats actuels (runs MLflow)
+
+Premiers résultats remontés via `python -m scripts.compare_runs` ·
+
+| modèle | epochs | métrique principale | valeur |
+| --- | --- | --- | --- |
+| **CNN scratch** | 1 | test macro-AUROC | **0.6933** |
+| **CNN scratch** | 1 | test micro-AUROC | 0.7739 |
+| **CNN scratch** | 1 | test macro-F1 @ 0.5 | 0.1376 |
+| **AE conv** | 1 | val MSE reconstruction | 0.2119 |
+| **VAE** | 1 | val anomaly score (MSE + KL) | 0.4555 |
+
+Le F1 macro reste bas après 1 epoch · normal vu le déséquilibre extrême
+(`hernia` à 0.18 % de prévalence) et l'absence de calibration du seuil
+par classe. L'AUROC macro à 0.69 dès la première epoch valide le pipeline
+supervisé. Les runs ResNet18 et ViT-Tiny sont prévus pour la version
+finale (GPU recommandé) · résultats attendus dans la zone 0.78 - 0.83
+selon littérature (CheXNet · ~0.84 sur 14-label NIH ChestX-ray14).
 
 ## 9. Tracking MLflow
 

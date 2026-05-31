@@ -1,0 +1,6 @@
+run_id,run_name,family,variant,backbone,status,model_class,epochs,image_size,batch_size,lr,n_params,device,fusion,test_macro_auroc,test_micro_auroc,test_macro_f1,val_macro_auroc,val_recon_err_mean,val_anomaly_score_mean,test_macro_auroc_fused_logits,test_macro_auroc_image_logits,test_macro_auroc_text_logits
+7e516023,cnn-scratch,cnn,scratch,,RUNNING,SimpleCNN,2,64,256,0.001,1207918,cpu,,,,,,,,,,
+b7065309,multimodal-late,multimodal,,,RUNNING,,1,64,32,0.0005,,,late,,,,,,,,,
+d2437e9f,vae,anomaly,VAE,,FINISHED,,1,64,64,0.001,,,,,,,,,0.45545029640197754,,,
+31dea3b8,autoencoder,anomaly,AE,,FINISHED,,1,64,64,0.001,,,,,,,,0.2119043618440628,,,,
+b58fefee,cnn-scratch,cnn,scratch,,FINISHED,SimpleCNN,1,64,64,0.001,1207918,cpu,,0.6932970641858437,0.773925902536106,0.1375615454021887,0.6923711744427796,,,,,
