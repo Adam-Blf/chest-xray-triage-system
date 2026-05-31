@@ -32,9 +32,11 @@ Thumbs.db
 data/
 !data/.gitkeep
 
-# Model artifacts (sauf le PDF du rapport, qu'on veut versionner)
+# Model artifacts (sauf le PDF du rapport et les figures EDA, qu'on veut versionner)
 artifacts/*
 !artifacts/RAPPORT.pdf
+!artifacts/figures/
+artifacts/figures/*.npz
 checkpoints/
 *.pt
 *.pth

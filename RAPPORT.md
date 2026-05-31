@@ -51,14 +51,47 @@ reports eux-mêmes (§3.2 du sujet).
 
 ## 3. Analyse exploratoire
 
-À compléter par notebook · `notebooks/01_eda.ipynb` ·
+Figures et stats produites par `python -m scripts.eda` (dans
+`artifacts/figures/`).
 
-- distribution des 14 labels (très déséquilibrée · "infiltration" et
-  "atelectasis" dominent, "hernia" sous 0.2 %)
-- matrice de co-occurrence (effusion ↔ atelectasis très corrélés)
-- exemples visuels positifs vs négatifs par pathologie
-- pour OpenI · longueur moyenne des FINDINGS / IMPRESSION,
-  distribution des tokens, statistiques de négation
+### 3.1 Distribution des labels (train, 78 468 images)
+
+| pathologie | support | prévalence |
+| --- | --- | --- |
+| infiltration | 13 914 | 17.73 % |
+| effusion | 9 261 | 11.80 % |
+| atelectasis | 7 996 | 10.19 % |
+| nodule | 4 375 | 5.58 % |
+| mass | 3 988 | 5.08 % |
+| pneumothorax | 3 705 | 4.72 % |
+| consolidation | 3 263 | 4.16 % |
+| pleural_thickening | 2 279 | 2.90 % |
+| cardiomegaly | 1 950 | 2.49 % |
+| emphysema | 1 799 | 2.29 % |
+| edema | 1 690 | 2.15 % |
+| fibrosis | 1 158 | 1.48 % |
+| pneumonia | 978 | 1.25 % |
+| hernia | 144 | 0.18 % |
+
+Conséquences directes · forte sensibilité aux faux négatifs sur les
+classes rares (`hernia`, `pneumonia`, `fibrosis`). Le `pos_weight` par
+classe dans la BCE compense partiellement, mais l'AUROC macro restera
+tirée vers le bas par ces classes.
+
+### 3.2 Co-occurrence
+
+La matrice `P(col | ligne)` (`figures/cooccurrence.png`) confirme les
+corrélations cliniques attendues · `effusion` ↔ `atelectasis`,
+`infiltration` ↔ `consolidation`, `pneumothorax` rarement seul. Cela
+légitime l'usage d'une activation **sigmoïde par classe** + BCE plutôt
+que d'une softmax.
+
+### 3.3 Exemples visuels
+
+`figures/examples_positive.png` montre le premier positif de chaque
+classe en train. La résolution 64×64 perd les détails fins (nodules de
+petite taille) · pour les classes rares, viser la résolution 128×128 ou
+224×224 améliore le contraste utile au réseau.
 
 ## 4. Préparation
 
