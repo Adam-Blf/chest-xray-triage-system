@@ -1,5 +1,13 @@
 # Chest X-Ray Triage System
 
+<!-- adam-badges:start -->
+[![commits](https://img.shields.io/github/commit-activity/t/Adam-Blf/chest-xray-triage-system?color=001329&label=commits&style=flat-square)](https://github.com/Adam-Blf/chest-xray-triage-system/commits)
+[![visites](https://hits.sh/github.com/Adam-Blf/chest-xray-triage-system.svg?style=flat-square&label=visites&color=001329)](https://hits.sh/github.com/Adam-Blf/chest-xray-triage-system/)
+[![last commit](https://img.shields.io/github/last-commit/Adam-Blf/chest-xray-triage-system?color=D4A437&style=flat-square&label=dernier%20push)](https://github.com/Adam-Blf/chest-xray-triage-system/commits)
+[![top language](https://img.shields.io/github/languages/top/Adam-Blf/chest-xray-triage-system?style=flat-square)](https://github.com/Adam-Blf/chest-xray-triage-system)
+[![license](https://img.shields.io/github/license/Adam-Blf/chest-xray-triage-system?style=flat-square&color=D4A437)](LICENSE)
+<!-- adam-badges:end -->
+
 Système de triage de radiographies thoraciques basé sur le deep learning. Le projet regroupe la classification supervisée, la détection d’anomalies, la fusion image + texte, le suivi des expériences avec MLflow et une démonstration Streamlit.
 
 ## Architecture
