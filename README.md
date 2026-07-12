@@ -14,13 +14,13 @@ Système de triage de radiographies thoraciques basé sur le deep learning. Le p
 
 ```mermaid
 flowchart TB
-    D["Données<br/>ChestMNIST · NIH · OpenI · MIMIC-CXR"]
-    P["Pipeline de préparation<br/>splits patient-disjoints · transforms · normalisation"]
-    S["Modèles supervisés<br/>CNN · ResNet · EfficientNet · ViT"]
-    A["Détection d’anomalies<br/>Autoencoder · VAE"]
-    M["Multimodal<br/>image + texte · fusion early / intermediate / late"]
-    T["MLflow<br/>paramètres · métriques · checkpoints"]
-    U["Démo Streamlit<br/>upload · scores · rapport"]
+    D["Données<br/>ChestMNIST - NIH - OpenI - MIMIC-CXR"]
+    P["Pipeline de préparation<br/>splits patient-disjoints - transforms - normalisation"]
+    S["Modèles supervisés<br/>CNN - ResNet - EfficientNet - ViT"]
+    A["Détection d’anomalies<br/>Autoencoder - VAE"]
+    M["Multimodal<br/>image + texte - fusion early / intermediate / late"]
+    T["MLflow<br/>paramètres - métriques - checkpoints"]
+    U["Démo Streamlit<br/>upload - scores - rapport"]
 
     D --> P --> S --> T --> U
     P --> A --> T
@@ -29,7 +29,7 @@ flowchart TB
 
 ## Stack
 
-PyTorch · torchvision · timm · medmnist · scikit-learn · MLflow · Streamlit
+PyTorch - torchvision - timm - medmnist - scikit-learn - MLflow - Streamlit
 
 ## Installation
 
