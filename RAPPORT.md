@@ -273,6 +273,7 @@ après l'entraînement complet (10 epochs CNN, 10 epochs transfer, 8
 epochs ViT, 15 epochs AE/VAE, 8 epochs multimodal).
 
 **Perspectives** ·
+
 - migration vers OpenI réel pour valider la composante multimodale
 - pré-traitement spécifique radiographies (CLAHE, normalisation
   segmentale thoracique)
@@ -280,3 +281,42 @@ epochs ViT, 15 epochs AE/VAE, 8 epochs multimodal).
 - comparaison à une baseline CheXNet (DenseNet121 entraîné full)
 - intégration explicite des métadonnées NIH (sexe, âge, view position)
 - évaluation patient-level (sous-cohorte de validation externe)
+- ajout d'une explication par carte de saillance (Grad-CAM) dans le
+  démonstrateur pour suivre la recommandation de la FDA sur les
+  systèmes d'aide à la décision médicale
+
+## 13. Références
+
+1. **Wang, X. et al.** (2017). *ChestX-ray8 · Hospital-scale Chest X-ray
+   Database and Benchmarks on Weakly-Supervised Classification and
+   Localization of Common Thorax Diseases*. CVPR.
+   [arXiv:1705.02315](https://arxiv.org/abs/1705.02315)
+2. **Yang, J. et al.** (2023). *MedMNIST v2 · A Large-Scale Lightweight
+   Benchmark for 2D and 3D Biomedical Image Classification*. Scientific
+   Data 10, 41. [DOI:10.1038/s41597-022-01721-8](https://doi.org/10.1038/s41597-022-01721-8)
+3. **He, K. et al.** (2016). *Deep Residual Learning for Image
+   Recognition*. CVPR. [arXiv:1512.03385](https://arxiv.org/abs/1512.03385)
+4. **Huang, G. et al.** (2017). *Densely Connected Convolutional
+   Networks*. CVPR. [arXiv:1608.06993](https://arxiv.org/abs/1608.06993)
+5. **Dosovitskiy, A. et al.** (2021). *An Image is Worth 16x16 Words ·
+   Transformers for Image Recognition at Scale*. ICLR.
+   [arXiv:2010.11929](https://arxiv.org/abs/2010.11929)
+6. **Kingma, D. & Welling, M.** (2014). *Auto-Encoding Variational
+   Bayes*. ICLR. [arXiv:1312.6114](https://arxiv.org/abs/1312.6114)
+7. **Rajpurkar, P. et al.** (2017). *CheXNet · Radiologist-Level
+   Pneumonia Detection on Chest X-Rays with Deep Learning*.
+   [arXiv:1711.05225](https://arxiv.org/abs/1711.05225)
+8. **Johnson, A. et al.** (2019). *MIMIC-CXR · A large publicly
+   available database of labeled chest radiographs*. Scientific Data 6,
+   317. [DOI:10.1038/s41597-019-0322-0](https://doi.org/10.1038/s41597-019-0322-0)
+9. **Demner-Fushman, D. et al.** (2016). *Preparing a collection of
+   radiology examinations for distribution and retrieval (Open-i)*.
+   JAMIA 23(2), 304-310. [DOI:10.1093/jamia/ocv080](https://doi.org/10.1093/jamia/ocv080)
+10. **Chambon, S. et al.** (2024). *Adapting Large Language Models for
+    Radiology Report Generation*. RSNA Radiology AI.
+11. **MLflow Project** (2024). *Documentation officielle*.
+    [https://mlflow.org/docs/latest/](https://mlflow.org/docs/latest/)
+12. **Streamlit Inc.** (2024). *Documentation officielle*.
+    [https://docs.streamlit.io/](https://docs.streamlit.io/)
+13. **Wightman, R.** (2019). *PyTorch Image Models (timm)*.
+    [GitHub repo](https://github.com/huggingface/pytorch-image-models)
